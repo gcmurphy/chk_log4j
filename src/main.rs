@@ -70,7 +70,7 @@ impl Check for ClassName {
         let jar = zip::ZipArchive::new(reader)?;
         let err = jar
             .file_names()
-            .filter(|f| VULNERABLE_CLASS.is_match(*f))
+            .filter(|f| self.is_match(*f))
             .join(", ");
         if err.is_empty() {
             Ok(())
