@@ -1,0 +1,19 @@
+[package]
+name = "chk_log4j"
+version = "0.1.0"
+edition = "2018"
+authors = ["Grant Murphy <gcmurphy@protonmail.com>"]
+description = "A tool to help find jar files that are vulnerable to CVE-2021-44228"
+readme = "README.md"
+repository = "https://github.com/gcmurphy/chk_log4j"
+license = "Apache-2.0"
+keywords = ["log4j", "log4shell", "jar", "security"]
+
+[dependencies]
+anyhow = "1.0.51"
+clap = "2.34.0"
+regex = "1.5.4"
+sodiumoxide = "0.2.7"
+lazy_static = "1.4.0"
+itertools = "0.10.3"
+zip = "0.5.13"
