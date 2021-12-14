@@ -11,9 +11,10 @@ keywords = ["log4j", "log4shell", "jar", "security"]
 
 [dependencies]
 anyhow = "1.0.51"
+ansi_term = "0.12.1"
 clap = "2.34.0"
+itertools = "0.10.3"
+lazy_static = "1.4.0"
 regex = "1.5.4"
 sodiumoxide = "0.2.7"
-lazy_static = "1.4.0"
-itertools = "0.10.3"
 zip = "0.5.13"

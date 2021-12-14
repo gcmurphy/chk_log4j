@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate lazy_static;
 
+use ansi_term::{Color::Red, Style};
 use anyhow::{anyhow, Result};
 use clap::{App, Arg};
 use itertools::Itertools;
@@ -68,10 +69,7 @@ impl Check for ClassName {
     fn run(&self, filename: &str) -> Result<()> {
         let reader = BufReader::new(File::open(filename)?);
         let jar = zip::ZipArchive::new(reader)?;
-        let err = jar
-            .file_names()
-            .filter(|f| self.is_match(*f))
-            .join(", ");
+        let err = jar.file_names().filter(|f| self.is_match(*f)).join(", ");
         if err.is_empty() {
             Ok(())
         } else {
@@ -84,23 +82,30 @@ impl Check for ClassName {
 }
 
 fn main() -> Result<()> {
-    let opts = App::new("CVE-2021-44228 Log4Shell File Detector")
-    .version("1.0")
-    .author("Grant Murphy <gcmurphy@protonmail.com>")
-    .about("Check a JAR file against known vulnerable hashes and the existence of a JndiLookup.class")
-    .arg(Arg::with_name("JAR")
-        .help("The JAR file to scan")
-        .required(true)
-        .index(1)
-    ).get_matches();
+    let opts =
+        App::new(Style::new().bold().paint("chk_log4j").to_string())
+            .about("Checks if a .jar file is vulnerable to CVE-2021-44228")
+            .version("1.0")
+            .arg(
+                Arg::with_name("JAR")
+                    .help("The .jar file to scan")
+                    .required(true)
+                    .index(1),
+            )
+            .get_matches();
 
     let filename = opts.value_of("JAR").unwrap();
     if let Err(e) = FileHash::new()
         .run(filename)
         .and_then(|_| ClassName::new().run(filename))
     {
-        Err(anyhow!("{} {}", filename, e))
-    } else {
-        Ok(())
+        println!(
+            "{}: {} {}",
+            Red.paint("error"),
+            Style::new().underline().paint(filename),
+            e
+        );
+        std::process::exit(1);
     }
+    Ok(())
 }
